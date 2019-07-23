@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+ 
+  <!--<bean id="applicationProperties" class="net.one97.billing.core.util.ApplicationProperties"
+		init-method="init">
+	</bean>
+   
+	-->
+
+	<import resource="CachingContext.xml"/>
+
+	<bean id="beanFactory" class="net.one97.billing.core.factory.BeanFactory">		
+	</bean>
+	<bean id="incrementer"
+		class="org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer">
+		<property name="dataSource" ref="dataSourceForUpdate" />
+		<property name="incrementerName" value="be_seq_gen" />
+		<property name="columnName" value="value" />
+		<property name="cacheSize" value="50" />
+	</bean>
+   
+   <util:properties id="billingProperties" location="classpath:BillingEngine.properties" />
+  
+ <!--  <bean name="/awccdebit.do" class="net.one97.billing.controller.DebitController">
+		<property name="billingEngine">
+			<ref local="billingEngine" />
+		</property>
+	</bean>
+	 
+	 <bean name="/glomdebit.do" class="net.one97.billing.controller.DebitController">
+		<property name="billingEngine">
+			<ref local="billingEngine" />
+		</property>
+	</bean>
+	
+	<bean name="/status.do" class="net.one97.billing.controller.StatusController">
+		<property name="billingEngine">
+			<ref local="billingEngine" />
+		</property>
+	</bean>  -->
+	
+	<bean id="billingEngine" class="net.one97.billing.core.BillingEngineImpl">
+		<property name="billingService">
+			<ref local="billingService" />
+		</property>
+		<property name="responseParser">
+			<ref local="responseParser" />
+		</property>
+	</bean>
+	
+		
+	<bean id="awcc"
+		class="net.one97.billing.awcc.controller.AwccBillingImpl" >
+		<property name="billingService">
+			<ref local="billingService" />
+		</property>
+		<property name="billingHandler">
+			<ref local="awccbillingHandler" />
+		</property>
+
+	</bean>
+	
+	<!-- <bean id="globacom"
+		class="net.one97.billing.glom.controller.GlomBillingImpl" >
+		<property name="billingService">
+			<ref local="billingService" />
+		</property>
+		<property name="billingHandler">
+			<ref local="glombillingHandler" />
+		</property>
+
+	</bean>  -->
+
+   <!--  <bean id="glombillingHandler"
+		class="net.one97.billing.glom.handler.GlomBillingHandler">
+		<property name="pspcap1Handler">
+			<ref bean="glompspcap1Handler" />
+		</property>
+	</bean>
+ -->
+	<bean id="awccbillingHandler"
+		class="net.one97.billing.awcc.handler.AwccBillingHandler">
+		<property name="httpHandler">
+			<ref bean="awcchttpHandler" />
+		</property>
+	</bean> 
+
+	
+	<bean id="awcchttpHandler"
+		class="net.one97.billing.awcc.protocol.http.HttpBillingAwccImpl" init-method="init">
+	</bean>
+	
+	<!-- <bean id="glompspcap1Handler"
+		class="net.one97.billing.glom.protocol.pspucap1.PspUcap1Billing" >
+	</bean>  -->
+ 
+    <bean id="responseParser"
+		class="net.one97.billing.core.response.ResponseParser" >
+	</bean>  
+
+	<bean id="billingService" class="net.one97.billing.core.service.impl.BillingServiceImpl">
+		<property name="billingDao">
+			<ref local="billingDao" />
+		</property>
+	</bean>
+	 
+	
+	<bean id="billingDao" class="net.one97.billing.core.dao.jdbcimpl.BillingDaoImpl">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate" />
+		</property>
+		<property name="incrementer">
+			<ref bean="incrementer" />
+		</property>
+		<property name="masterNamedParamTemplate">
+			<ref bean="masterNamedParamTemplate" />
+		</property>
+		<property name="slaveNamedParamTemplate">
+			<ref bean="slaveNamedParamTemplate" />
+		</property>
+	</bean>
+
+	
+
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSourceForFetch" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="masterNamedParamTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSourceForUpdate" />
+		</constructor-arg>
+	</bean>
+    <bean id="slaveNamedParamTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSourceForFetch" />
+		</constructor-arg>
+	</bean>
+
+
+	<bean id="cacheHandler" class="net.one97.billing.core.cache.BillingCache"
+		init-method="init">
+		<property name="billingService">
+			<ref bean="billingService" />
+		</property>
+	</bean>
+	
+	<bean id="scheduledTask"
+      class="org.springframework.scheduling.timer.ScheduledTimerTask">
+    <property name="delay">
+        <value>600</value>
+    </property>
+    <property name="period">
+        <value>600000</value>
+    </property>
+    <property name="timerTask">
+        <ref bean="methodInvokingTask"/>
+    </property>
+    </bean>
+    
+    <bean id="methodInvokingTask"
+      class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+    <property name="targetObject"><ref bean="cacheHandler"/></property>
+    <property name="targetMethod"><value>refresh</value></property>
+   </bean>
+    
+    <bean id="timerFactory"
+    class="org.springframework.scheduling.timer.TimerFactoryBean">
+     <property name="scheduledTimerTasks">
+    <list>
+      <ref local="scheduledTask"/>
+    </list>
+    </property>
+   </bean>
+   
+   <!-- ROSHAN Subscription Manager -->
+       
+  	<bean id="roshan"
+		class="net.one97.billing.roshan.controller.RoshanBillingImpl" >
+		<property name="billingService">
+			<ref local="billingService" />
+		</property>
+		<property name="billingHandler">
+			<ref local="roshanbillingHandler" />
+		</property>
+	</bean>
+
+ 	<bean id="roshanbillingHandler"
+		class="net.one97.billing.roshan.handler.RoshanBillingHandler">
+		<property name="billlingProtocol">
+			<ref bean="roshanHttpHandler" />
+		</property>
+	</bean>
+	
+	<bean id="roshanHttpHandler"
+		class="net.one97.billing.roshan.protocol.http.HttpBillingRoshanImpl" init-method="init">
+	</bean>
+    
+    <!-- End Of Roshan -->
+    
+    <bean id="dataSourceForUpdate" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<!--<property name="url" value="jdbc:mysql://10.0.6.223:3306/subscription_manager"/>
+		 --><!--<property name="url" value="jdbc:mysql://localhost:3306/sub_mgr"/>
+		 --><property name="url" value="jdbc:mysql://localhost:3306/subscription-gateway-roshan"/>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>root</value>
+		</property>
+		<property name="maxActive" value="10" />
+		<property name="initialSize" value="3" />
+	</bean>
+	<bean id="dataSourceForFetch" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<!--<property name="url" value="jdbc:mysql://localhost:3306/billing_engine"/>
+		--><property name="url" value="jdbc:mysql://localhost:3306/subscription-gateway-roshan"/>
+		<!--<property name="url" value="jdbc:mysql://10.0.6.223:3306/subscription_manager"/>	
+		--><property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>root</value>
+		</property>
+		<property name="maxActive" value="10" />
+		<property name="initialSize" value="3" />
+	</bean>
+   
+	
+	
+</beans>
+    

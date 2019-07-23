@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+ 
+  <!--<bean id="applicationProperties" class="net.one97.billing.core.util.ApplicationProperties"
+		init-method="init">
+	</bean>
+   
+	-->
+
+	<bean id="beanFactory" class="net.one97.billing.core.factory.BeanFactory">		
+	</bean>
+	<bean id="incrementer"
+		class="org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer">
+		<property name="dataSource" ref="dataSourceForUpdate" />
+		<property name="incrementerName" value="be_seq_gen" />
+		<property name="columnName" value="value" />
+		<property name="cacheSize" value="25" />
+	</bean>
+   
+   <util:properties id="billingProperties" location="classpath:BillingEngine.properties" />
+  
+	 
+	
+	<bean id="billingEngine" class="net.one97.billing.core.BillingEngineImpl">
+		<property name="billingService">
+			<ref local="billingService" />
+		</property>
+		<property name="responseParser">
+			<ref local="responseParser" />
+		</property>
+	</bean>
+			
+    <bean id="responseParser"
+		class="net.one97.billing.core.response.ResponseParser" >
+	</bean>
+
+	<bean id="billingService" class="net.one97.billing.core.service.impl.BillingServiceImpl">
+		<property name="billingDao">
+			<ref local="billingDao" />
+		</property>
+	</bean>
+	 
+	<bean id="billingDao" class="net.one97.billing.core.dao.jdbcimpl.BillingDaoImpl">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate" />
+		</property>
+		<property name="incrementer">
+			<ref bean="incrementer" />
+		</property>
+		<property name="masterNamedParamTemplate">
+			<ref bean="masterNamedParamTemplate" />
+		</property>
+		<property name="slaveNamedParamTemplate">
+			<ref bean="slaveNamedParamTemplate" />
+		</property>
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSourceForFetch" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="jdbcTemplateUpdate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSourceForUpdate" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="masterNamedParamTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSourceForUpdate" />
+		</constructor-arg>
+	</bean>
+    <bean id="slaveNamedParamTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSourceForFetch" />
+		</constructor-arg>
+	</bean>
+
+
+	<bean id="cacheHandler" class="net.one97.billing.core.cache.BillingCache"
+		init-method="init">
+		<property name="billingService">
+			<ref bean="billingService" />
+		</property>
+	</bean>
+	
+	<bean id="scheduledTask"
+      class="org.springframework.scheduling.timer.ScheduledTimerTask">
+    <property name="delay">
+        <value>${cacheRefreshIntervalForGateway}</value>
+    </property>
+    <property name="period">
+        <value>${cacheRefreshIntervalForGateway}</value>
+    </property>
+    <property name="timerTask">
+        <ref bean="methodInvokingTask"/>
+    </property>
+    </bean>
+    
+    <bean id="methodInvokingTask"
+      class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+    <property name="targetObject"><ref bean="cacheHandler"/></property>
+    <property name="targetMethod"><value>refresh</value></property>
+   </bean>
+    
+    <bean id="timerFactory"
+    class="org.springframework.scheduling.timer.TimerFactoryBean">
+     <property name="scheduledTimerTasks">
+    <list>
+      <ref local="scheduledTask"/>
+    </list>
+    </property>
+   </bean>
+	
+	<import resource="classpath:ext-billing-core.xml"/>
+
+</beans>
+    

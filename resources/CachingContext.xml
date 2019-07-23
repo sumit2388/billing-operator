@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	<!--
+
+
+
+
+		<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/> </bean> <bean
+		id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg><ref bean="dataSource"/></constructor-arg> </bean>
+		<bean id="namedParamTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg><ref bean="dataSource"/></constructor-arg> </bean>
+		<bean id="incrementer"
+		class="org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer">
+		<property name="dataSource" ref="dataSource" /> <property
+		name="incrementerName" value="be_seq_gen" /> <property
+		name="columnName" value="value" /> <property name="cacheSize"
+		value="50" /> </bean> <bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"> <property
+		name="driverClassName"> <value>com.mysql.jdbc.Driver</value>
+		</property> <property name="url">
+		<value>jdbc:mysql://10.0.8.19:3306/billing_engine</value> </property>
+		<property name="username"> <value>root</value> </property> <property
+		name="password"> <value></value> </property> <property
+		name="maxActive" value="10" /> <property name="initialSize" value="1"
+		/> </bean> <bean id="applicationProperties"
+		class="net.one97.billing.core.util.ApplicationProperties"
+		init-method="init"> </bean>
+	-->
+
+
+	<!--
+		<bean id="billingService"
+		class="net.one97.billing.core.service.impl.BillingServiceImpl">
+		<property name="billingDao"><ref local="billingDao" /></property>
+		</bean> <bean id="beanFactory"
+		class="net.one97.billing.core.factory.BeanFactory"> </bean> <bean
+		id="billingDao"
+		class="net.one97.billing.core.dao.jdbcimpl.BillingDaoImpl"> <property
+		name="jdbcTemplate"><ref bean="jdbcTemplate"/></property> <property
+		name="incrementer"><ref bean="incrementer"/></property> <property
+		name="namedParamTemplate"><ref bean="namedParamTemplate"/></property>
+		</bean>
+	-->
+
+	<bean id="cacheManager"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation">
+			<value>classpath:ehcache.xml</value>
+		</property>
+	</bean>
+	
+	<bean id="cacheEntryFactory"
+		class="net.one97.common.cache.factory.CacheEngineEntryFactory">
+		<property name="cacheName" value ="BillingEngineCache"/>
+	</bean>
+	
+	<bean id="cacheEngine"
+		class="net.one97.common.cache.engine.impl.CacheEngineImpl">
+		<property name="cacheManager">
+			<ref local="cacheManager" />
+		</property>
+	</bean>
+
+	<bean id="BillingEngineCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref local="cacheManager" />
+		</property>
+		<property name="cacheEntryFactory" ref="cacheEntryFactory"/>
+		<property name="eternal" value ="true"/>
+		<property name="cacheName" value ="BillingEngineCache"/>
+	</bean>
+
+
+
+</beans>
+  
+   

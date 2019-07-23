@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.0
+Created-By: 11.3-b02 (Sun Microsystems Inc.)
+Main-Class: net.one97.billing.awcc.servicemanager.AwccServiceManagerWr
+ apper
+Class-Path: . lib/c3p0-0.9.1.2.jar lib/commons-codec-1.4.jar lib/commo
+ ns-collections-3.2.1.jar lib/commons-dbcp-1.2.2.jar lib/commons-httpc
+ lient-3.1.jar lib/commons-logging-1.0.4.jar lib/commons-pool-1.3.jar 
+ lib/log4j-1.2.14.jar lib/mysql-connector-java-5.1.6-bin.jar lib/sprin
+ g-2.5.6.jar lib/Caching.jar lib/commons-lang-2.3.jar
+

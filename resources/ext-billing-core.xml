@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+ 
+	<!-- AWCC Subscription Manager -->
+	<!--
+	<bean id="awcc"
+		class="net.one97.billing.awcc.controller.AwccBillingImpl" >
+		<property name="billingService" ref="billingService" />
+		<property name="billingHandler">
+			<ref local="awccbillingHandler" />
+		</property>
+	</bean>	
+
+	<bean id="awccbillingHandler"
+		class="net.one97.billing.awcc.handler.AwccBillingHandler">
+		<property name="httpHandler">
+			<ref bean="awcchttpHandler" />
+		</property>
+	</bean>
+	
+	<bean id="awcchttpHandler"
+		class="net.one97.billing.awcc.protocol.http.HttpBillingAwccImpl" init-method="init">
+	</bean>
+	-->
+
+	<!-- AWCC Service Manager -->
+	<!--
+	 <bean id="awcc"
+		class="net.one97.billing.awcc.servicemanager.controller.AwccServiceManagerBillingImpl" >
+		<property name="billingService">
+			<ref local="billingService" />
+		</property>
+		<property name="billingHandler">
+			<ref local="awccbillingHandler" />
+		</property>
+		<property name="awccUserDao">
+			<ref bean="awccUserDao" />
+		</property>
+	</bean>
+	
+	<bean id="awccbillingHandler"
+		class="net.one97.billing.awcc.servicemanager.handler.AwccServiceManagerBillingHandler">
+		<property name="httpHandler">
+			<ref bean="awcchttpHandler" />
+		</property>
+	</bean>
+	
+	<bean id="awcchttpHandler"
+		class="net.one97.billing.awcc.servicemanager.protocol.http.HttpBillingAwccServiceManagerImpl">
+		<property name="awccUserDao">
+			<ref bean="awccUserDao" />
+		</property>
+	</bean>
+	
+    <bean id="awccUserDao" class="net.one97.billing.awcc.servicemanager.dao.impl.AwccUserDAOImpl">
+		<property name="jdbcTemplateSelect">
+			<ref bean="jdbcTemplate" />
+		</property>	
+		<property name="jdbcTemplateUpdate">
+			<ref bean="jdbcTemplateUpdate" />
+		</property>
+	</bean>
+
+	<bean id="awccServiceManagerHandler"
+		class="net.one97.billing.awcc.servicemanager.protocol.http.HttpBillingAwccServiceManagerImpl">
+		<property name="awccUserDao">
+			<ref bean="awccUserDao" />
+		</property>
+	</bean>
+	-->
+	
+	<!-- Vodafone SG
+     <bean id="vodafone" class="net.one97.billing.vodasg.controller.VodasgBillingImpl" >
+      <property name="billingService">
+      <ref local="billingService" />
+      </property>
+     <property name="billingHandler">
+      <ref local="vodasgbillingHandler" />
+     </property>
+    </bean>
+    
+    <bean id="vodasgbillingHandler" class="net.one97.billing.vodasg.handler.VodasgBillingHandler">
+     <property name="httpHandler">
+     <ref bean="vodasghttpHandler" />
+     </property>
+    </bean>
+
+    <bean id="vodasghttpHandler"
+     class="net.one97.billing.vodasg.protocol.http.HttpBillingVodasgImpl" init-method="init">
+    </bean>
+    -->
+	
+	<!-- Docomo Subscription Manager -->
+	<!--
+  	<bean id="docomo"
+		class="net.one97.billing.docomo.controller.DOCOMOBillingImpl" >
+		<property name="billingService" ref="billingService" />
+		<property name="billingHandler">
+			<ref local="docomobillingHandler" />
+		</property>
+	</bean>
+
+ 	<bean id="docomobillingHandler"
+		class="net.one97.billing.docomo.handler.DOCOMOBillingHandler">
+		<property name="billlingProtocol">
+			<ref bean="docomoSOAPHandler" />
+		</property>
+	</bean>
+	
+	<bean id="docomoSOAPHandler"
+		class="net.one97.billing.docomo.protocol.soap.BillingProtocolSOAPImpl" init-method="init">
+	</bean>
+	-->
+	
+	 <!-- ROSHAN Subscription Manager -->
+	 <!--
+  	<bean id="roshan"
+		class="net.one97.billing.roshan.controller.RoshanBillingImpl" >
+		<property name="billingService" ref="billingService" />
+		<property name="billingHandler">
+			<ref local="roshanbillingHandler" />
+		</property>
+	</bean>
+
+ 	<bean id="roshanbillingHandler"
+		class="net.one97.billing.roshan.handler.RoshanBillingHandler">
+		<property name="billlingProtocol">
+			<ref bean="roshanHttpHandler" />
+		</property>
+	</bean>
+	
+	<bean id="roshanHttpHandler"
+		class="net.one97.billing.roshan.protocol.http.HttpBillingRoshanImpl" init-method="init">
+	</bean>
+	-->
+    <!-- End Of Roshan -->
+    
+     <!-- vodafoneOCG Subscription Manager -->       
+	 <!--
+  	<bean id="vodafone"
+		class="net.one97.billing.vodaocg.controller.VodaOcgBillingImpl" >
+		<property name="billingService" ref="billingService" />
+		<property name="billingHandler">
+			<ref local="vodaocgbillingHandler" />
+		</property>
+	</bean>
+
+ 	<bean id="vodaocgbillingHandler"
+		class="net.one97.billing.vodaocg.handler.VodaOcgBillingHandler">
+		<property name="billlingProtocol">
+			<ref bean="vodaocgHttpHandler" />
+		</property>
+	</bean>
+	
+	<bean id="vodaocgHttpHandler"
+		class="net.one97.billing.vodaocg.protocol.http.HttpBillingVodaOcgImpl" init-method="init">
+	</bean>
+	-->
+    <!-- End Of vodafoneOCG -->
+    
+	<!-- Tigo Subscription Manager -->
+
+
+<!-- Tigo Subscription Manager -->
+
+        <bean id="tigo"
+                class="net.one97.billing.tigo.controller.TigoBillingImpl" >
+                <property name="billingService" ref="billingService" />
+                <property name="billingHandler">
+                        <ref local="tigobillingHandler" />
+                </property>
+                <property name="tigoDao">
+			<ref bean="tigoDao" /></property>
+        </bean>
+
+        <bean id="tigobillingHandler"                 class="net.one97.billing.tigo.handler.TigoBillingHandler">
+                <property name="billlingProtocolTigo">
+                        <ref bean="tigoHandler" />
+                </property>
+		<property name="billlingProtocolFfe">
+                        <ref bean="tigoFFEHandler" />
+                </property>
+                <property name="billlingProtocolPesa">
+                        <ref bean="tigoFFEPesaHandler" />
+                </property>
+
+                <property name="billlingProtocolJson">
+                        <ref bean="tigoJsonHandler" />
+                </property>
+        </bean>
+
+        <bean id="tigoHandler"
+                class="net.one97.billing.tigo.protocol.soap.SoapBillingTigoImpl" init-method="init">
+        </bean>
+	
+	<bean id="tigoFFEHandler"
+                class="net.one97.billing.tigo.protocol.ffe.FFEBillingTigoImpl" init-method="init">
+        </bean>
+
+        <bean id="tigoFFEPesaHandler"
+                class="net.one97.billing.tigo.protocol.pesa.PesaBillingTigoImpl" init-method="init">
+	</bean>
+
+	<bean id="tigoJsonHandler" class="net.one97.billing.tigo.protocol.json.JsonBillingTigoImpl" >
+ 	<property name="tigoJsonManagementWrapper"> 
+		<ref bean="tigoJsonManagementWrapper" />
+		</property>
+        </bean>
+
+        <bean id="tigoDao" class="net.one97.billing.tigo.dao.impl.TigoDAOImpl">	
+		<property name="jdbcTemplateUpdate">
+			<ref bean="jdbcTemplateUpdate" />
+		</property>
+              <property name="jdbcTemplateSelect">
+			<ref bean="jdbcTemplate" />
+		</property>	
+	</bean>
+
+	<bean id="tigoJsonManagementWrapper" class="net.one97.tigo.wrapper.TigoJsonManagementWrapper">
+        <property name="timweClient">
+			<ref bean="timweClient" />
+		</property>
+ 	</bean>
+
+	<bean id="timweClient" class="net.one97.billing.tigo.protocol.json.TimweClient">
+       	</bean>
+
+    <!-- End Of Tigo -->
+    
+	<!-- Halotal start -->
+        <bean id="halotel"
+                class="net.one97.billing.halotal.controller.HalotalBillingImpl" >
+                <property name="billingService" ref="billingService" />
+                <property name="billingHandler"> <ref local="halotalbillingHandler" /> </property>               
+                <property name="halotalDao"><ref bean="halotalDao" /></property>
+        </bean>
+
+        <bean id="halotalbillingHandler" class="net.one97.billing.halotal.handler.HalotalBillingHandler">
+               <property name="halotalJsonHandler">
+                        <ref bean="halotalJsonHandler" />
+               </property>
+        </bean>
+
+        <bean id="halotalJsonHandler"
+                class="net.one97.billing.halotal.protocol.json.JsonBillingImpl" >
+                <property name="halotalJsonManagementWrapper"> 
+					<ref bean="halotalJsonManagementWrapper" />
+				</property>
+        </bean>
+        
+        <bean id="halotalDao" class="net.one97.billing.halotal.dao.impl.HalotalDAOImpl">
+			<property name="jdbcTemplateSelect">
+				<ref bean="jdbcTemplate" />
+			</property>	
+			<property name="jdbcTemplateUpdate">
+				<ref bean="jdbcTemplateUpdate" />
+			</property>
+	    </bean>
+	
+		<bean id="halotalJsonManagementWrapper" class="net.one97.billing.halotal.protocol.json.HalotalJsonManagementWrapper">
+		 <property name="restClient">
+                        <ref bean="restClient" />
+                </property>
+        </bean>
+
+  			<bean id="restClient" class="net.one97.billing.halotal.protocol.json.RestClient">
+        </bean>
+      
+   
+<!--    Halotal end -->
+</beans>
+    
